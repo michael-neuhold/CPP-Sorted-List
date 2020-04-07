@@ -14,8 +14,9 @@ int main() {
     mylist.insert(9);
 
     // print testing
-    mylist.print_list();
+    //mylist.print_list();
 
+/*
     // list size
     std::cout << "========= size =========\n";
     std::cout << "list size: " << mylist.size() << "\n";
@@ -43,6 +44,20 @@ int main() {
     std::cout << "== pop front & back ======\n";
     mylist.pop_front();
     mylist.pop_back();
+*/
+
+
+    for(auto &p : mylist) {
+        std::cout << "value_iterator: " << p << std::endl;
+    }
+
+    //auto iter = mylist.end();
+
+   // iter -= 2;
+
+    //std::cout << *iter <<std::endl;
+    //std::cout << "value: " << *(iter++) << std::endl;
+    //std::cout << "value: " << *iter << std::endl;
 
     // print list
     mylist.print_list();

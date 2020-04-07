@@ -9,6 +9,104 @@ public:
     using value_type = T;
     using node_type = sorted_list_node<T>;
 
+
+    struct sorted_list_iterator {
+
+        using iterator = sorted_list_iterator;
+
+        sorted_list_iterator();
+
+        sorted_list_iterator(node_type *src)
+        : current_node{src}
+        {}
+
+        sorted_list_iterator(iterator &src)
+        : current_node{src.current_node}
+        {}
+
+        ~sorted_list_iterator() {
+            // nothing to do
+        }
+
+        // compare operator
+        friend bool operator==(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        friend bool operator!=(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        friend bool operator<=(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        friend bool operator>=(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        friend bool operator<(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        friend bool operator>(iterator const & lhs,iterator const & rhs) {
+            return {};
+        }
+
+        // other operators
+
+        iterator &operator=(iterator const & src) {
+            current_node = src;
+            return *this;
+        }
+
+        value_type &operator*() {
+            return current_node->value;
+        }
+
+        value_type operator->() {
+            return current_node->value;
+        }
+
+        iterator &operator++() {
+            current_node = current_node->next;
+            return *this;
+        }
+
+        iterator operator++(int) {
+            iterator tmp{*this};
+            current_node = current_node->next;
+            return tmp;
+        }
+
+        iterator &operator--() {
+            current_node = current_node->prev;
+            return *this;
+        }
+
+        iterator operator--(int) {
+            iterator tmp{*this};
+            current_node = current_node->prev;
+            return tmp;
+        }
+
+        iterator &operator +=(int offset) {
+            while(offset--) ++(*this);
+            return *this;
+        }
+
+        iterator &operator -=(int offset) {
+            while(offset--) --(*this);
+            return *this;
+        }
+
+    private:
+        // some privates
+        node_type *current_node;
+    };
+
+    using iterator = sorted_list_iterator;
+
     sorted_list()
     : list_size{0},
       head{nullptr},
@@ -19,14 +117,12 @@ public:
         clear();
     }
 
-    // checks if value is in list
     bool find(const T & value) const {
         node_type *tmp = head;
         while(tmp && tmp->value != value) tmp = tmp->next;
         return tmp != nullptr;
     }
 
-    // inserts element into list
     void insert(const T & value) {
         node_type * node = new sorted_list_node(value);
         list_size++;
@@ -65,7 +161,6 @@ public:
         node->next = tmp;
     }
 
-    // print list
     void print_list() {
         std::cout << "===== list ======\n";
         node_type *tmp = head;
@@ -75,8 +170,6 @@ public:
         }
     }
 
-    // removes element and returns true
-        // returns false if not found
     bool erase(const T & value) {
         node_type *tmp = head;
         while(tmp && tmp->value != value) tmp = tmp->next;
@@ -87,62 +180,74 @@ public:
         return true;
     }
 
-    // returns number of elements
     size_t size() const {
         return list_size;
     }
 
-    // checks if there are any elements
     bool empty() const {
         return list_size == 0;
     }
 
-    // returns smallest element
     T &front() const {
+        assert(head);
         return head->value;
     }
 
-    // returns greatest element
     T &back() const {
+        assert(tail);
         return tail->value;
     }
 
-    // removes smallest element
     void pop_front() {
+        if(empty()) return;
+        if(size() == 1) clear();
         list_size--;
-        if(size() == 1) {
-            delete head;
-            head = nullptr;
-            tail = nullptr;
-            return;
-        }
         node_type *tmp = head;
         head = head->next;
         head->prev = nullptr;
+        tmp->next = nullptr;
         delete tmp;
     }
 
-    // removes greatest element
     void pop_back() {
-        list_size--;
-        if(size() == 1) {
-            delete tail;
-            head = nullptr;
-            tail = nullptr;
-            return;
-        }
-        node_type *tmp = tail;
-        tail = tail->prev;
-        tail->next = nullptr;
-        delete tmp;
+       if(empty()) return;
+       if(size() == 1) clear();
+       list_size--;
+       node_type *tmp = tail;
+       tail = tail->prev;
+       tail->next = nullptr;
+       tmp->prev = nullptr;
+       delete tmp;
     }
 
-    // empties list
     void clear() {
+        node_type *tmp;
         while(head) {
-            pop_front();
+            tmp = head;
+            head = head->next;
+            delete tmp;
+            list_size--;
         }
     }
+
+    /* ================== */
+
+    iterator begin() {
+        return iterator(head);
+    }
+
+    iterator end() {
+        return iterator(tail);
+    }
+
+    //iterator rbegin();
+    //iterator rend();
+
+    //std::pair<iterator, bool> insert(const T &value);
+    //iterator insert(iterator hint, const T &value);
+    //void erase(iterator first, iterator last);
+
+
 
 private:
     // some private members
