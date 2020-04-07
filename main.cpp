@@ -10,6 +10,7 @@ int main() {
     mylist.insert(0);
     mylist.insert(1);
     mylist.insert(7);
+    mylist.insert(7);
     mylist.insert(20);
     mylist.insert(9);
 
@@ -47,9 +48,9 @@ int main() {
 */
 
 
-    for(auto &p : mylist) {
+   /* for(auto &p : mylist) {
         std::cout << "value_iterator: " << p << std::endl;
-    }
+    }*/
 
     //auto iter = mylist.end();
 
@@ -59,7 +60,15 @@ int main() {
     //std::cout << "value: " << *(iter++) << std::endl;
     //std::cout << "value: " << *iter << std::endl;
 
-    // print list
+
     mylist.print_list();
+
+    auto iter = mylist.begin();
+    ++iter;
+    ++iter;
+    auto test = mylist.insert(iter,100);
+    mylist.print_list();
+
+
 
 }

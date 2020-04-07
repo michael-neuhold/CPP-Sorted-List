@@ -2,22 +2,24 @@
 
 #include "sorted_list_node.h"
 
-template<typename T, typename C = std::less<>>
+template<typename T, typename C = std::less<T>>
 class sorted_list {
 public:
 
     using value_type = T;
     using node_type = sorted_list_node<T>;
-
+    C compare;
 
     struct sorted_list_iterator {
+        friend sorted_list_iterator sorted_list::insert(sorted_list_iterator hint, const T &value);
 
         using iterator = sorted_list_iterator;
 
         sorted_list_iterator();
 
         sorted_list_iterator(node_type *src)
-        : current_node{src}
+        : current_node{src},
+          prev_node{nullptr}
         {}
 
         sorted_list_iterator(iterator &src)
@@ -30,31 +32,14 @@ public:
 
         // compare operator
         friend bool operator==(iterator const & lhs,iterator const & rhs) {
-            return {};
+            return lhs.current_node == rhs.current_node;
         }
 
         friend bool operator!=(iterator const & lhs,iterator const & rhs) {
-            return {};
-        }
-
-        friend bool operator<=(iterator const & lhs,iterator const & rhs) {
-            return {};
-        }
-
-        friend bool operator>=(iterator const & lhs,iterator const & rhs) {
-            return {};
-        }
-
-        friend bool operator<(iterator const & lhs,iterator const & rhs) {
-            return {};
-        }
-
-        friend bool operator>(iterator const & lhs,iterator const & rhs) {
-            return {};
+            return !(lhs==rhs);
         }
 
         // other operators
-
         iterator &operator=(iterator const & src) {
             current_node = src;
             return *this;
@@ -103,6 +88,7 @@ public:
     private:
         // some privates
         node_type *current_node;
+        node_type *prev_node;
     };
 
     using iterator = sorted_list_iterator;
@@ -124,6 +110,7 @@ public:
     }
 
     void insert(const T & value) {
+        if(find(value)) return;
         node_type * node = new sorted_list_node(value);
         list_size++;
 
@@ -135,7 +122,7 @@ public:
         }
 
         // insert front
-        if (value < head->value) {
+        if (compare(value,head->value)) {
             node->prev = nullptr;
             node->next = head;
             head->prev = node;
@@ -144,7 +131,7 @@ public:
         }
 
         // insert back
-        if(!(value < tail->value)) {
+        if(!(compare(value,tail->value))) {
             node->next = nullptr;
             node->prev = tail;
             tail->next = node;
@@ -240,14 +227,25 @@ public:
         return iterator(tail);
     }
 
-    //iterator rbegin();
-    //iterator rend();
+    std::reverse_iterator<iterator> rbegin() {
+        return std::make_reverse_iterator(end());
+    }
+
+    std::reverse_iterator<iterator> rend() {
+        return std::make_reverse_iterator(begin());
+    }
 
     //std::pair<iterator, bool> insert(const T &value);
-    //iterator insert(iterator hint, const T &value);
+
+    iterator insert(iterator hint, const T &value) { // TODO
+        node_type * node = new sorted_list_node(value);
+        node->prev = hint.current_node;
+        node->next = hint.current_node->next;
+        hint.current_node->next = node;
+        return iterator(node);
+    }
+
     //void erase(iterator first, iterator last);
-
-
 
 private:
     // some private members
