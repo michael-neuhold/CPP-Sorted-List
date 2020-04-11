@@ -1,5 +1,4 @@
 #pragma once
-
 #include "sorted_list_node.h"
 
 template<typename T, typename C = std::less<T>>
@@ -17,9 +16,9 @@ public:
 
         sorted_list_iterator();
 
-        sorted_list_iterator(node_type *src)
+        sorted_list_iterator(node_type *src, node_type* prev)
         : current_node{src},
-          prev_node{nullptr}
+          prev_node{prev}
         {}
 
         sorted_list_iterator(iterator &src)
@@ -27,7 +26,6 @@ public:
         {}
 
         ~sorted_list_iterator() {
-            // nothing to do
         }
 
         // compare operator
@@ -54,24 +52,39 @@ public:
         }
 
         iterator &operator++() {
+            prev_node = current_node;
             current_node = current_node->next;
             return *this;
         }
 
         iterator operator++(int) {
             iterator tmp{*this};
+            prev_node = current_node;
             current_node = current_node->next;
             return tmp;
         }
 
         iterator &operator--() {
-            current_node = current_node->prev;
+            if(current_node) {
+                prev_node = current_node;
+                current_node = current_node->prev;
+            } else {
+                current_node = prev_node;
+                prev_node = nullptr;
+            }
+
             return *this;
         }
 
         iterator operator--(int) {
             iterator tmp{*this};
-            current_node = current_node->prev;
+            if(current_node) {
+                prev_node = current_node;
+                current_node = current_node->prev;
+            } else {
+                current_node = prev_node;
+                prev_node = nullptr;
+            }
             return tmp;
         }
 
@@ -110,6 +123,8 @@ public:
     }
 
     void insert(const T & value) {
+
+        // return if value already exists in list
         if(find(value)) return;
         node_type * node = new sorted_list_node(value);
         list_size++;
@@ -149,20 +164,23 @@ public:
     }
 
     void print_list() {
-        std::cout << "===== list ======\n";
+        std::cout << "sorted_list: ";
         node_type *tmp = head;
         while(tmp) {
-            std::cout << "value: " << tmp->value << "\n";
+            std::cout << tmp->value << " ";
             tmp = tmp->next;
         }
+        std::cout << "\n";
     }
 
     bool erase(const T & value) {
         node_type *tmp = head;
         while(tmp && tmp->value != value) tmp = tmp->next;
         if(!tmp) return false;
+        if(size() == 1) clear();
         tmp->prev->next = tmp->next;
         tmp->next->prev = tmp->prev;
+        list_size--;
         delete tmp;
         return true;
     }
@@ -220,11 +238,11 @@ public:
     /* ================== */
 
     iterator begin() {
-        return iterator(head);
+        return iterator(head, nullptr);
     }
 
     iterator end() {
-        return iterator(tail);
+        return iterator(nullptr, tail);
     }
 
     std::reverse_iterator<iterator> rbegin() {
@@ -235,17 +253,33 @@ public:
         return std::make_reverse_iterator(begin());
     }
 
-    //std::pair<iterator, bool> insert(const T &value);
+    /*
+    std::pair<iterator,bool> insert(const T &value) {
+        iterator test{head, nullptr};
+        return {test,true};
+    }
+
 
     iterator insert(iterator hint, const T &value) { // TODO
         node_type * node = new sorted_list_node(value);
+
+        if(!hint.current_node->prev && C(value,*hint)) {
+            // push front
+        }
+
+        if(!hint.current_node->next && !C(value,*hint)) {
+            // push back
+        }
+
         node->prev = hint.current_node;
         node->next = hint.current_node->next;
         hint.current_node->next = node;
         return iterator(node);
     }
-
-    //void erase(iterator first, iterator last);
+    */
+    void erase(iterator first, iterator last) {
+        // to do
+    }
 
 private:
     // some private members

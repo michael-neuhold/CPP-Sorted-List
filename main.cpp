@@ -2,73 +2,100 @@
 #include "sorted_list.h"
 
 
+void test_1() {
+    std::cout << "#---------- TEST 1 ----------#\n";
+    sorted_list<int> sorted_list;
+    sorted_list.insert(4);
+    sorted_list.insert(0);
+    sorted_list.insert(1);
+    sorted_list.insert(7);
+    sorted_list.insert(7);
+    sorted_list.insert(20);
+    sorted_list.insert(9);
+    sorted_list.print_list();
+}
+
+void test_2() {
+    std::cout << "#---------- TEST 2 ----------#\n";
+    sorted_list<int> sorted_list;
+    for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
+    std::cout << "list size: " << sorted_list.size() << "\n";
+}
+
+void test_3() {
+    std::cout << "#---------- TEST 3 ----------#\n";
+    sorted_list<int> sorted_list;
+    sorted_list.insert(4);
+    sorted_list.insert(0);
+    sorted_list.insert(1);
+    sorted_list.insert(7);
+    sorted_list.insert(7);
+    sorted_list.insert(20);
+    sorted_list.insert(9);
+    sorted_list.print_list();
+    std::cout << std::boolalpha;
+    std::cout << "find 4: " << sorted_list.find(4) << "\n";
+    std::cout << "find 11: " << sorted_list.find(11) << "\n";
+    std::cout << "find 20: " << sorted_list.find(20) << "\n";
+    std::cout << "find 8: " << sorted_list.find(8) << "\n";
+    std::cout << std::noboolalpha;
+}
+
+void test_4() {
+    std::cout << "#---------- TEST 4 ----------#\n";
+    sorted_list<int> sorted_list;
+    sorted_list.insert(4);
+    sorted_list.insert(0);
+    sorted_list.insert(1);
+    sorted_list.insert(7);
+    sorted_list.insert(7);
+    sorted_list.insert(20);
+    sorted_list.insert(9);
+    sorted_list.print_list();
+    std::cout << std::boolalpha;
+    std::cout << "erase 7: " << sorted_list.erase(7) << "\n";
+    std::cout << "erase 1: " << sorted_list.erase(1) << "\n";
+    std::cout << "erase 21: " << sorted_list.erase(21) << "\n";
+    std::cout << "erase 8: " << sorted_list.erase(8) << "\n";
+    std::cout << std::noboolalpha;
+    sorted_list.print_list();
+}
+
+void test_5() {
+    std::cout << "#---------- TEST 5 ----------#\n";
+    sorted_list<int> sorted_list;
+    for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
+    sorted_list.print_list();
+    std::cout << "front: " << sorted_list.front() << "\n";
+    std::cout << "back: " << sorted_list.back() << "\n";
+}
+
+void test_6() {
+    std::cout << "#---------- TEST 6 ----------#\n";
+    sorted_list<int> sorted_list;
+    for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
+    sorted_list.print_list();
+    sorted_list.pop_front();
+    sorted_list.pop_back();
+    sorted_list.print_list();
+}
+
+void test(int test_number = 0) {
+    switch(test_number) {
+        case 0: test_1(); test_2(); test_3();
+                test_4(); test_5(); test_6();
+            break;
+        case 1: test_1(); break;
+        case 2: test_2(); break;
+        case 3: test_3(); break;
+        case 4: test_4(); break;
+        case 5: test_5(); break;
+        case 6: test_6(); break;
+    }
+}
+
 int main() {
 
-    sorted_list<int> mylist;
-
-    mylist.insert(4);
-    mylist.insert(0);
-    mylist.insert(1);
-    mylist.insert(7);
-    mylist.insert(7);
-    mylist.insert(20);
-    mylist.insert(9);
-
-    // print testing
-    //mylist.print_list();
-
-/*
-    // list size
-    std::cout << "========= size =========\n";
-    std::cout << "list size: " << mylist.size() << "\n";
-
-    // find testing
-    std::cout << "========= find =========\n";
-    std::cout << "find 4: " << mylist.find(4) << "\n";
-    std::cout << "find 11: " << mylist.find(11) << "\n";
-    std::cout << "find 20: " << mylist.find(20) << "\n";
-    std::cout << "find 8: " << mylist.find(8) << "\n";
-
-    // erase testing
-    std::cout << "========= erase =========\n";
-    std::cout << "erase 7: " << mylist.erase(7) << "\n";
-    std::cout << "erase 1: " << mylist.erase(1) << "\n";
-    std::cout << "erase 21: " << mylist.erase(21) << "\n";
-    std::cout << "erase 8: " << mylist.erase(8) << "\n";
-
-    // front & back testing
-    std::cout << "===== front & back ======\n";
-    std::cout << "front: " << mylist.front() << "\n";
-    std::cout << "back: " << mylist.back() << "\n";
-
-    // pop front & pop back testing
-    std::cout << "== pop front & back ======\n";
-    mylist.pop_front();
-    mylist.pop_back();
-*/
-
-
-   /* for(auto &p : mylist) {
-        std::cout << "value_iterator: " << p << std::endl;
-    }*/
-
-    //auto iter = mylist.end();
-
-   // iter -= 2;
-
-    //std::cout << *iter <<std::endl;
-    //std::cout << "value: " << *(iter++) << std::endl;
-    //std::cout << "value: " << *iter << std::endl;
-
-
-    mylist.print_list();
-
-    auto iter = mylist.begin();
-    ++iter;
-    ++iter;
-    auto test = mylist.insert(iter,100);
-    mylist.print_list();
-
-
+   test();
 
 }
