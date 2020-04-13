@@ -1,6 +1,6 @@
 #include <iostream>
 #include "sorted_list.h"
-
+#include <list>
 
 void test_1() {
     std::cout << "#---------- TEST 1 ----------#\n";
@@ -80,10 +80,46 @@ void test_6() {
     sorted_list.print_list();
 }
 
+void test_7() {
+    std::cout << "#---------- TEST 7 ----------#\n";
+    sorted_list<int> sorted_list;
+    sorted_list.front();
+    //sorted_list.back();
+    //sorted_list.pop_back();
+    //sorted_list.pop_front();
+}
+
+void test_8() {
+    std::cout << "#---------- TEST 8 ----------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    auto iter = sorted_list.begin();
+    iter += 3;
+    std::cout << "inserted: " << *(sorted_list.insert(iter, 8)) << "\n";
+    std::cout << "inserted: " << *(sorted_list.insert(iter, 0)) << "\n";
+    iter += 3;
+    std::cout << "inserted: " << *(sorted_list.insert(iter, 100)) << "\n";
+    sorted_list.print_list();
+}
+
+void test_9() {
+    std::cout << "#---------- TEST 9 ----------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    auto iter_1 = sorted_list.begin();
+    iter_1 += 3;
+    auto iter_2 = sorted_list.end();
+    sorted_list.erase(iter_1,iter_2);
+    std::cout << "front: " << sorted_list.front() << "\n";
+    std::cout << "back: " << sorted_list.back() << "\n";
+    sorted_list.print_list();
+}
+
 void test(int test_number = 0) {
     switch(test_number) {
         case 0: test_1(); test_2(); test_3();
                 test_4(); test_5(); test_6();
+                test_8(); test_9();
             break;
         case 1: test_1(); break;
         case 2: test_2(); break;
@@ -91,11 +127,16 @@ void test(int test_number = 0) {
         case 4: test_4(); break;
         case 5: test_5(); break;
         case 6: test_6(); break;
+        case 7: test_7(); break;
+        case 8: test_8(); break;
+        case 9: test_9(); break;
     }
 }
 
 int main() {
 
-   test();
+   //test();
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    auto r_iter = sorted_list.rbegin();
 
 }

@@ -11,6 +11,7 @@ public:
 
     struct sorted_list_iterator {
         friend sorted_list_iterator sorted_list::insert(sorted_list_iterator hint, const T &value);
+        friend void sorted_list::erase(sorted_list_iterator first, sorted_list_iterator last);
 
         using iterator = sorted_list_iterator;
 
@@ -39,7 +40,8 @@ public:
 
         // other operators
         iterator &operator=(iterator const & src) {
-            current_node = src;
+            current_node = src.current_node;
+            prev_node = src.prev_node;
             return *this;
         }
 
@@ -112,6 +114,12 @@ public:
       tail{nullptr}
     {}
 
+    sorted_list(std::initializer_list<T> list)
+    : list_size{0}
+    {
+        for(auto item : list) insert(item);
+    }
+
     ~sorted_list() {
         clear();
     }
@@ -123,8 +131,6 @@ public:
     }
 
     void insert(const T & value) {
-
-        // return if value already exists in list
         if(find(value)) return;
         node_type * node = new sorted_list_node(value);
         list_size++;
@@ -145,22 +151,16 @@ public:
             return;
         }
 
-        // insert back
-        if(!(compare(value,tail->value))) {
-            node->next = nullptr;
-            node->prev = tail;
-            tail->next = node;
-            tail = node;
-            return;
-        }
-
         // find position
         node_type *tmp = head;
-        while (tmp->next) tmp = tmp->next;
-        tmp->prev->next = node;
-        node->prev = tmp->prev;
-        tmp->prev = node;
-        node->next = tmp;
+        while (tmp->next != nullptr && compare(tmp->next->value,value)) tmp = tmp->next;
+        node->next = tmp->next;
+        if(tmp->next != nullptr)
+            node->next->prev = node;
+        else
+            tail = node;
+        tmp->next = node;
+        node->prev = tmp;
     }
 
     void print_list() {
@@ -194,17 +194,17 @@ public:
     }
 
     T &front() const {
-        assert(head);
+        assert(!empty() && "&front from empty list");
         return head->value;
     }
 
     T &back() const {
-        assert(tail);
+        assert(!empty() && "&back from empty list");
         return tail->value;
     }
 
     void pop_front() {
-        if(empty()) return;
+        assert(!empty() && "pop_front from empty list");
         if(size() == 1) clear();
         list_size--;
         node_type *tmp = head;
@@ -215,7 +215,7 @@ public:
     }
 
     void pop_back() {
-       if(empty()) return;
+       assert(!empty() && "pop_back from empty list");
        if(size() == 1) clear();
        list_size--;
        node_type *tmp = tail;
@@ -254,31 +254,59 @@ public:
     }
 
     /*
-    std::pair<iterator,bool> insert(const T &value) {
-        iterator test{head, nullptr};
-        return {test,true};
-    }
-
-
-    iterator insert(iterator hint, const T &value) { // TODO
-        node_type * node = new sorted_list_node(value);
-
-        if(!hint.current_node->prev && C(value,*hint)) {
-            // push front
-        }
-
-        if(!hint.current_node->next && !C(value,*hint)) {
-            // push back
-        }
-
-        node->prev = hint.current_node;
-        node->next = hint.current_node->next;
-        hint.current_node->next = node;
-        return iterator(node);
+    std::pair<iterator,bool> insert(const T &value) { // TODO
+        return {};
     }
     */
+
+    iterator insert(iterator hint, const T &value) { // TODO
+        if(find(value)) return hint;
+        node_type * node = new sorted_list_node(value);
+        if(empty()) {
+            head = node;
+            tail = node;
+            return hint;
+        } else {
+            if(compare(*hint,value)) {
+                while(hint.current_node && compare(*hint, value)) hint++;
+                hint--;
+            } else if (!compare(*hint,value)) {
+                while(hint.current_node->prev && !compare(*hint, value)) hint--;
+            }
+            if(hint.current_node == head) {
+                node->next = hint.current_node;
+                hint.current_node->prev = node;
+                head = node;
+            } else {
+                node->next = hint.current_node->next;
+                if(hint.current_node->next != nullptr)
+                    node->next->prev = node;
+                else
+                    tail = node;
+                hint.current_node->next = node;
+                node->prev = hint.current_node;
+            }
+        }
+        list_size++;
+        return sorted_list_iterator{node, nullptr};
+    }
+
+    // interval: [first,last) includes first but not last
     void erase(iterator first, iterator last) {
-        // to do
+        if(first == last) return;
+        while(first != last) {
+            iterator tmp{first};
+            first++;
+            if(tmp.current_node->prev)
+                tmp.current_node->prev->next = tmp.current_node->next;
+            else
+                head = first.current_node;
+            if(tmp.current_node->next)
+                tmp.current_node->next->prev = tmp.current_node->prev;
+            else
+                tail = tmp.current_node->prev;
+            delete tmp.current_node;
+        }
     }
 
 private:
