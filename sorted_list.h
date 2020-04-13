@@ -15,6 +15,13 @@ public:
 
         using iterator = sorted_list_iterator;
 
+        // necessary for std::make_reverse_iterator
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using value_type = T;
+        using reference = T&;
+        using iterator_category = std::bidirectional_iterator_tag;
+
         sorted_list_iterator();
 
         sorted_list_iterator(node_type *src, node_type* prev)
@@ -22,8 +29,9 @@ public:
           prev_node{prev}
         {}
 
-        sorted_list_iterator(iterator &src)
-        : current_node{src.current_node}
+        sorted_list_iterator(const iterator &src)
+        : current_node{src.current_node},
+          prev_node{src.prev_node}
         {}
 
         ~sorted_list_iterator() {
@@ -125,13 +133,13 @@ public:
     }
 
     bool find(const T & value) const {
-        node_type *tmp = head;
+        node_type *tmp{head};
         while(tmp && tmp->value != value) tmp = tmp->next;
         return tmp != nullptr;
     }
 
     void insert(const T & value) {
-        if(find(value)) return;
+      //  if(find(value)) return;
         node_type * node = new sorted_list_node(value);
         list_size++;
 

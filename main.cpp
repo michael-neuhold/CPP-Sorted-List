@@ -115,11 +115,51 @@ void test_9() {
     sorted_list.print_list();
 }
 
+void test_10() {
+    std::cout << "#---------- TEST 10 ---------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    auto r_iter = sorted_list.rbegin();
+    std::cout << "rever. list: ";
+    for(auto i = r_iter; i != sorted_list.rend(); i++) {
+        std::cout << *i << " ";
+    }
+    std::cout << "\n";
+}
+
+void test_11() {
+    std::cout << "#---------- TEST 11 ---------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    std::cout << "std::reverse:\n";
+    std::reverse(sorted_list.begin(),sorted_list.end());
+    sorted_list.print_list();
+}
+
+void test_12() {
+    std::cout << "#---------- TEST 12 ---------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    sorted_list.erase(std::remove_if(sorted_list.begin(),sorted_list.end(),
+            [](unsigned int x){ return x < 10; }),sorted_list.end());
+    sorted_list.print_list();
+}
+
+void test_13() {
+    std::cout << "#---------- TEST 13 ---------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    sorted_list.print_list();
+    std::transform(sorted_list.begin(), sorted_list.end(), sorted_list.begin(),
+            [](int x) -> int { return x * 2; });
+    sorted_list.print_list();
+}
+
 void test(int test_number = 0) {
     switch(test_number) {
         case 0: test_1(); test_2(); test_3();
                 test_4(); test_5(); test_6();
-                test_8(); test_9();
+                test_8(); test_9(); test_10();
+                test_11(); test_12(); test_13();
             break;
         case 1: test_1(); break;
         case 2: test_2(); break;
@@ -130,13 +170,15 @@ void test(int test_number = 0) {
         case 7: test_7(); break;
         case 8: test_8(); break;
         case 9: test_9(); break;
+        case 10: test_10(); break;
+        case 11: test_11(); break;
+        case 12: test_12(); break;
+        case 13: test_13(); break;
     }
 }
 
 int main() {
 
-   //test();
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
-    auto r_iter = sorted_list.rbegin();
+   test();
 
 }
