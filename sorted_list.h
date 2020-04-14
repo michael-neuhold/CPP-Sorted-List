@@ -5,10 +5,19 @@
 class UnaryPredicate {
 public:
     bool operator()(int value) {
-        return value & 1;
+        return value & 1;   // return true if odd
     }
 };
 
+template<typename T>
+class PairCompare {
+public:
+    bool operator()(std::pair<T,T> first,std::pair<T,T> second) {
+        return first.first < second.first && first.second < second.second;
+    }
+};
+
+namespace swe4 {
 
 template<typename T, typename C = std::less<T>>
 class sorted_list {
@@ -107,11 +116,12 @@ public:
             return tmp;
         }
 
+        /* for testing */
         iterator &operator +=(int offset) {
             while(offset--) ++(*this);
             return *this;
         }
-
+        /* for testing */
         iterator &operator -=(int offset) {
             while(offset--) --(*this);
             return *this;
@@ -273,8 +283,8 @@ public:
     }
 
 
-    std::pair<iterator,bool> insert(const T &value) { // TODO
-        //  if(find(value)) return;
+    std::pair<iterator,bool> insert(const T &value) {
+        if(find(value)) return {sorted_list_iterator(head, nullptr),false};
         node_type * node = new sorted_list_node(value);
         list_size++;
 
@@ -308,9 +318,10 @@ public:
     }
 
 
-    iterator insert(iterator hint, const T &value) { // TODO
+    iterator insert(iterator hint, const T &value) {
         if(find(value)) return hint;
         node_type * node = new sorted_list_node(value);
+        list_size++;
         if(empty()) {
             head = node;
             tail = node;
@@ -336,7 +347,6 @@ public:
                 node->prev = hint.current_node;
             }
         }
-        list_size++;
         return sorted_list_iterator{node, nullptr};
     }
 
@@ -374,7 +384,10 @@ public:
                 } else {
                     current->prev->next = current->next;
                     current->next->prev = current->prev;
+                    tmp = current;
                     current = current->next;
+                    delete tmp;
+                    list_size--;
                 }
             } else {
                 current = current->next;
@@ -383,9 +396,9 @@ public:
     }
 
 private:
-    // some private members
     node_type *head;
     node_type *tail;
-
     size_t list_size;
 };
+
+}

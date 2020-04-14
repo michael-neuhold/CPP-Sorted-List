@@ -6,7 +6,7 @@ struct sorted_list_node {
     using value_type = T;
 
     sorted_list_node(T value)
-    : value{value}
+            : value{value}
     {}
 
     value_type value;

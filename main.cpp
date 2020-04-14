@@ -4,7 +4,7 @@
 
 void test_1() {
     std::cout << "#---------- TEST 1 ----------#\n";
-    sorted_list<int> sorted_list;
+    swe4::sorted_list<int> sorted_list;
     sorted_list.insert(4);
     sorted_list.insert(0);
     sorted_list.insert(1);
@@ -17,14 +17,13 @@ void test_1() {
 
 void test_2() {
     std::cout << "#---------- TEST 2 ----------#\n";
-    sorted_list<int> sorted_list;
-    for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
+    swe4::sorted_list<int> sorted_list{4, 0, 1, 7, 20, 9};
     std::cout << "list size: " << sorted_list.size() << "\n";
 }
 
 void test_3() {
     std::cout << "#---------- TEST 3 ----------#\n";
-    sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
+    swe4::sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
     sorted_list.print_list();
     std::cout << std::boolalpha;
     std::cout << "find 4: " << sorted_list.find(4) << "\n";
@@ -36,7 +35,7 @@ void test_3() {
 
 void test_4() {
     std::cout << "#---------- TEST 4 ----------#\n";
-    sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
+    swe4::sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
     sorted_list.print_list();
     std::cout << std::boolalpha;
     std::cout << "erase 7: " << sorted_list.erase(7) << "\n";
@@ -49,7 +48,7 @@ void test_4() {
 
 void test_5() {
     std::cout << "#---------- TEST 5 ----------#\n";
-    sorted_list<int> sorted_list;
+    swe4::sorted_list<int> sorted_list;
     for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
     sorted_list.print_list();
     std::cout << "front: " << sorted_list.front() << "\n";
@@ -58,7 +57,7 @@ void test_5() {
 
 void test_6() {
     std::cout << "#---------- TEST 6 ----------#\n";
-    sorted_list<int> sorted_list;
+    swe4::sorted_list<int> sorted_list;
     for(int i = 0; i < 10; i++) sorted_list.insert(rand() % 10);
     sorted_list.print_list();
     sorted_list.pop_front();
@@ -68,7 +67,7 @@ void test_6() {
 
 void test_7() {
     std::cout << "#---------- TEST 7 ----------#\n";
-    sorted_list<int> sorted_list;
+    swe4::sorted_list<int> sorted_list;
     sorted_list.front();
     //sorted_list.back();
     //sorted_list.pop_back();
@@ -77,7 +76,7 @@ void test_7() {
 
 void test_8() {
     std::cout << "#---------- TEST 8 ----------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     auto iter = sorted_list.begin();
     iter += 3;
@@ -90,7 +89,7 @@ void test_8() {
 
 void test_9() {
     std::cout << "#---------- TEST 9 ----------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     auto iter_1 = sorted_list.begin();
     iter_1 += 3;
@@ -103,7 +102,7 @@ void test_9() {
 
 void test_10() {
     std::cout << "#---------- TEST 10 ---------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     auto r_iter = sorted_list.rbegin();
     std::cout << "rever. list: ";
@@ -115,7 +114,7 @@ void test_10() {
 
 void test_11() {
     std::cout << "#---------- TEST 11 ---------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     std::cout << "std::reverse:\n";
     std::reverse(sorted_list.begin(),sorted_list.end());
@@ -124,7 +123,7 @@ void test_11() {
 
 void test_12() {
     std::cout << "#---------- TEST 12 ---------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     sorted_list.erase(std::remove_if(sorted_list.begin(),sorted_list.end(),
             [](unsigned int x){ return x < 10; }),sorted_list.end());
@@ -133,7 +132,7 @@ void test_12() {
 
 void test_13() {
     std::cout << "#---------- TEST 13 ---------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5};
     sorted_list.print_list();
     std::transform(sorted_list.begin(), sorted_list.end(), sorted_list.begin(),
             [](int x) -> int { return x * 2; });
@@ -142,11 +141,37 @@ void test_13() {
 
 void test_14() {
     std::cout << "#---------- TEST 14 ---------#\n";
-    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5, 21};
+    swe4::sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5, 21};
     sorted_list.print_list();
     UnaryPredicate is_odd;
     sorted_list.erase_if(is_odd);
     sorted_list.print_list();
+}
+
+void test_15() {
+    std::cout << "#---------- TEST 15 ---------#\n";
+    swe4::sorted_list<int, std::greater<>> sorted_list{4, 1, 3, 20, 9, 7, 11, 5, 21};
+    sorted_list.print_list();
+}
+
+void test_16() {
+    std::cout << "#---------- TEST 16 ---------#\n";
+    swe4::sorted_list<std::string> sorted_list{"aa","dd","bb","zz","cc"};
+    sorted_list.print_list();
+}
+
+void test_17() {
+    std::cout << "#---------- TEST 17 ---------#\n";
+    swe4::sorted_list<std::pair<int,int>,PairCompare<int>> sorted_list{
+        {18,17} , {1,2},
+        {4,3}   , {6,5},
+        {10,9}  , {8,7},
+        {12,11} , {14,13},
+        {16,15}};
+    for(auto p : sorted_list) {
+        std::cout << "{" << p.first << "," << p.second << "} ";
+    }
+    std::cout << std::endl;
 }
 
 void test(int test_number = 0) {
@@ -155,7 +180,8 @@ void test(int test_number = 0) {
                 test_4(); test_5(); test_6();
                 test_8(); test_9(); test_10();
                 test_11(); test_12(); test_13();
-                test_14();
+                test_14(); test_15(); test_16();
+                test_17();
             break;
         case 1: test_1(); break;
         case 2: test_2(); break;
@@ -171,6 +197,9 @@ void test(int test_number = 0) {
         case 12: test_12(); break;
         case 13: test_13(); break;
         case 14: test_14(); break;
+        case 15: test_15(); break;
+        case 16: test_16(); break;
+        case 17: test_17(); break;
     }
 }
 
