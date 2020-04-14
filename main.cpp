@@ -24,14 +24,7 @@ void test_2() {
 
 void test_3() {
     std::cout << "#---------- TEST 3 ----------#\n";
-    sorted_list<int> sorted_list;
-    sorted_list.insert(4);
-    sorted_list.insert(0);
-    sorted_list.insert(1);
-    sorted_list.insert(7);
-    sorted_list.insert(7);
-    sorted_list.insert(20);
-    sorted_list.insert(9);
+    sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
     sorted_list.print_list();
     std::cout << std::boolalpha;
     std::cout << "find 4: " << sorted_list.find(4) << "\n";
@@ -43,14 +36,7 @@ void test_3() {
 
 void test_4() {
     std::cout << "#---------- TEST 4 ----------#\n";
-    sorted_list<int> sorted_list;
-    sorted_list.insert(4);
-    sorted_list.insert(0);
-    sorted_list.insert(1);
-    sorted_list.insert(7);
-    sorted_list.insert(7);
-    sorted_list.insert(20);
-    sorted_list.insert(9);
+    sorted_list<int> sorted_list{4, 0, 1, 7, 7, 20, 9};
     sorted_list.print_list();
     std::cout << std::boolalpha;
     std::cout << "erase 7: " << sorted_list.erase(7) << "\n";
@@ -154,12 +140,22 @@ void test_13() {
     sorted_list.print_list();
 }
 
+void test_14() {
+    std::cout << "#---------- TEST 14 ---------#\n";
+    sorted_list<int> sorted_list{4, 1, 3, 20, 9, 7, 11, 5, 21};
+    sorted_list.print_list();
+    UnaryPredicate is_odd;
+    sorted_list.erase_if(is_odd);
+    sorted_list.print_list();
+}
+
 void test(int test_number = 0) {
     switch(test_number) {
         case 0: test_1(); test_2(); test_3();
                 test_4(); test_5(); test_6();
                 test_8(); test_9(); test_10();
                 test_11(); test_12(); test_13();
+                test_14();
             break;
         case 1: test_1(); break;
         case 2: test_2(); break;
@@ -174,11 +170,12 @@ void test(int test_number = 0) {
         case 11: test_11(); break;
         case 12: test_12(); break;
         case 13: test_13(); break;
+        case 14: test_14(); break;
     }
 }
 
 int main() {
 
-   test();
+    test();
 
 }

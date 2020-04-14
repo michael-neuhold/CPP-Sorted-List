@@ -1,6 +1,15 @@
 #pragma once
 #include "sorted_list_node.h"
 
+
+class UnaryPredicate {
+public:
+    bool operator()(int value) {
+        return value & 1;
+    }
+};
+
+
 template<typename T, typename C = std::less<T>>
 class sorted_list {
 public:
@@ -117,13 +126,15 @@ public:
     using iterator = sorted_list_iterator;
 
     sorted_list()
-    : list_size{0},
-      head{nullptr},
-      tail{nullptr}
+    : list_size{ 0 },
+      head{ nullptr },
+      tail{ nullptr }
     {}
 
     sorted_list(std::initializer_list<T> list)
-    : list_size{0}
+    : list_size{ 0 },
+      head{ nullptr},
+      tail{ nullptr }
     {
         for(auto item : list) insert(item);
     }
@@ -137,7 +148,7 @@ public:
         while(tmp && tmp->value != value) tmp = tmp->next;
         return tmp != nullptr;
     }
-
+/*
     void insert(const T & value) {
       //  if(find(value)) return;
         node_type * node = new sorted_list_node(value);
@@ -170,7 +181,7 @@ public:
         tmp->next = node;
         node->prev = tmp;
     }
-
+*/
     void print_list() {
         std::cout << "sorted_list: ";
         node_type *tmp = head;
@@ -261,11 +272,41 @@ public:
         return std::make_reverse_iterator(begin());
     }
 
-    /*
+
     std::pair<iterator,bool> insert(const T &value) { // TODO
-        return {};
+        //  if(find(value)) return;
+        node_type * node = new sorted_list_node(value);
+        list_size++;
+
+        // empty list
+        if(!head) {
+            head = node;
+            tail = node;
+            return {sorted_list_iterator(head, nullptr),true};
+        }
+
+        // insert front
+        if (compare(value,head->value)) {
+            node->prev = nullptr;
+            node->next = head;
+            head->prev = node;
+            head = node;
+            return {sorted_list_iterator(head, nullptr),true};
+        }
+
+        // find position
+        node_type *tmp = head;
+        while (tmp->next != nullptr && compare(tmp->next->value,value)) tmp = tmp->next;
+        node->next = tmp->next;
+        if(tmp->next != nullptr)
+            node->next->prev = node;
+        else
+            tail = node;
+        tmp->next = node;
+        node->prev = tmp;
+        return {sorted_list_iterator(node, nullptr),true};
     }
-    */
+
 
     iterator insert(iterator hint, const T &value) { // TODO
         if(find(value)) return hint;
@@ -314,6 +355,30 @@ public:
             else
                 tail = tmp.current_node->prev;
             delete tmp.current_node;
+        }
+    }
+
+    template<class UnaryPredicate> void erase_if(UnaryPredicate p) {
+        node_type *current{head};
+        node_type *tmp{nullptr};
+        if(empty()) return;
+
+        while(current) {
+            if(p(current->value)) {
+                if (current == head) {
+                    pop_front();
+                    current = head;
+                } else if (current == tail) {
+                    pop_back();
+                    current = tail;
+                } else {
+                    current->prev->next = current->next;
+                    current->next->prev = current->prev;
+                    current = current->next;
+                }
+            } else {
+                current = current->next;
+            }
         }
     }
 
